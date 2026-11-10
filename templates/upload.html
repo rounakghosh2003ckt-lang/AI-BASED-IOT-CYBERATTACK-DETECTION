@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Dataset Upload & Batch Analyzer - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-cloud-arrow-up text-info me-2"></i>BATCH DATASET ANALYZER & AUDITOR
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                UPLOAD CSV PACKET CAPTURES &bull; SCHEMA VALIDATION &bull; AUTOMATED ML INTRUSION AUDIT &bull; EXPORT FORENSIC REPORTS
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/api/download/sample-csv" class="btn-cyber-outline py-1 px-3">
+                <i class="bi bi-download text-success"></i>
+                <span>Download Sample Test CSV</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-file-earmark-arrow-up"></i>
+                        <span>Select IoT Packet Flow Dataset (CSV)</span>
+                    </h3>
+                    <span class="badge bg-secondary font-mono">MAX 32MB</span>
+                </div>
+
+                <div class="p-4 border-2 border-dashed rounded text-center mb-3" id="dropZone" style="border: 2px dashed rgba(0,240,255,0.3); background: rgba(0,240,255,0.02); cursor: pointer;">
+                    <i class="bi bi-file-earmark-spreadsheet display-4 text-info mb-2 d-block"></i>
+                    <h5 class="text-light mb-1">Drag & Drop CSV File Here</h5>
+                    <p class="text-muted small mb-3">or click to browse from your computer</p>
+                    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+                    <button type="button" class="btn-cyber-primary py-2 px-4" onclick="document.getElementById('csvFileInput').click()">
+                        <i class="bi bi-folder2-open me-1"></i>Browse CSV File
+                    </button>
+                    <div id="selectedFileName" class="mt-3 font-mono text-success small" style="display: none;"></div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn-cyber-primary flex-grow-1 justify-content-center py-2" id="btnRunPrediction" disabled>
+                        <i class="bi bi-play-circle-fill"></i>
+                        <span>Run AI Model Prediction</span>
+                    </button>
+                    <button class="btn-cyber-outline py-2 px-3" id="btnResetUpload">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schema Validation HUD -->
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Dataset Schema & Feature Compatibility</span>
+                    </h3>
+                    <span class="badge bg-info font-mono" id="schemaBadge">AWAITING FILE</span>
+                </div>
+
+                <div id="schemaPlaceholder" class="text-center py-5">
+                    <i class="bi bi-table display-5 text-muted opacity-25 d-block mb-3"></i>
+                    <p class="text-muted small">
+                        Upload or select a CSV to inspect row count, column mapping, and verify adherence to the 
+                        18-feature CIC-DDoS2019 / BoT-IoT schema.
+                    </p>
+                </div>
+
+                <div id="schemaDetails" style="display: none;">
+                    <div class="row g-2 mb-3 font-mono small">
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                                <span class="text-muted d-block">TOTAL ROWS:</span>
+                                <strong class="text-light" id="previewRows">0</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                                <span class="text-muted d-block">COLUMNS FOUND:</span>
+                                <strong class="text-light" id="previewCols">0</strong>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                                <span class="text-muted d-block">MODEL FEATURE MATCH:</span>
+                                <span class="text-success fw-bold" id="previewMatch">18 / 18 Features Compatible</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-muted small font-mono mb-2">RAW PREVIEW (FIRST 5 ROWS):</div>
+                    <div class="table-responsive" style="max-height: 180px;">
+                        <table class="table table-sm table-dark table-bordered font-mono small" style="font-size: 0.72rem;" id="previewTable">
+                            <!-- Populated via JS -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prediction Results Section (Hidden until prediction runs) -->
+    <div class="cyber-card" id="resultsSection" style="display: none;">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-clipboard2-data-fill text-success"></i>
+                <span>Batch Inference Summary & Forensic Audit Results</span>
+            </h3>
+            <a href="#" class="btn-cyber-primary py-1 px-3" id="btnDownloadResults">
+                <i class="bi bi-download"></i>
+                <span>Download Results CSV</span>
+            </a>
+        </div>
+
+        <!-- Summary Statistics Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 text-center">
+                    <span class="text-muted small font-mono d-block mb-1">TOTAL SAMPLES</span>
+                    <h3 class="font-mono text-light mb-0" id="resTotal">0</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-success border-opacity-25 text-center">
+                    <span class="text-muted small font-mono d-block mb-1">NORMAL TRAFFIC</span>
+                    <h3 class="font-mono text-success mb-0" id="resNormal">0</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-danger border-opacity-25 text-center">
+                    <span class="text-muted small font-mono d-block mb-1">MALICIOUS DETECTIONS</span>
+                    <h3 class="font-mono text-danger mb-0" id="resMalicious">0</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-warning border-opacity-25 text-center">
+                    <span class="text-muted small font-mono d-block mb-1">ATTACK RATIO</span>
+                    <h3 class="font-mono text-warning mb-0" id="resRatio">0%</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown Lists -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                    <h6 class="text-info font-mono mb-2">ATTACK CATEGORY BREAKDOWN</h6>
+                    <div id="attackBreakdownList" class="d-flex flex-column gap-2 font-mono small">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                    <h6 class="text-warning font-mono mb-2">SEVERITY RATING DISTRIBUTION</h6>
+                    <div id="severityBreakdownList" class="d-flex flex-column gap-2 font-mono small">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Annotated Results Table -->
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table-cyber" id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Flow ID</th>
+                        <th>Predicted Attack</th>
+                        <th>Confidence</th>
+                        <th>Severity</th>
+                        <th>Duration</th>
+                        <th>Fwd Pkts</th>
+                        <th>Bwd Pkts</th>
+                        <th>Fwd Bytes</th>
+                        <th>Bwd Bytes</th>
+                        <th>Packet Mean</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTbody">
+                    <!-- Rows injected via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

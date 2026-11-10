@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Overview - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Hero Section -->
+    <div class="hero-cyber rounded-3 mb-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="hero-tag">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>NEXT-GEN IoT SECURITY &bull; SOC THREAT INTELLIGENCE</span>
+                </div>
+                <h1 class="hero-title">
+                    AI-BASED IoT CYBERATTACK DETECTION SYSTEM
+                </h1>
+                <p class="hero-desc">
+                    An enterprise-grade cybersecurity platform engineered to monitor Internet-of-Things (IoT) 
+                    networks in real-time, detect multi-vector cyberattacks using high-precision Machine Learning, 
+                    and deliver actionable intelligence through a Security Operations Center (SOC) dashboard.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/dashboard" class="btn-cyber-primary px-4 py-3">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Launch SOC Dashboard</span>
+                    </a>
+                    <a href="/detection" class="btn-cyber-outline px-4 py-3">
+                        <i class="bi bi-cpu"></i>
+                        <span>Test AI Detector</span>
+                    </a>
+                    <a href="/monitoring" class="btn-cyber-outline px-4 py-3">
+                        <i class="bi bi-broadcast"></i>
+                        <span>Live IoT Stream</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block">
+                <!-- Visual Hologram Card -->
+                <div class="cyber-card accent-cyan p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted small font-mono">SOC TELEMETRY RADAR</span>
+                        <span class="badge-cyber critical">DEFCON 2</span>
+                    </div>
+                    <div class="text-center my-4">
+                        <div class="display-3 text-info font-monospace">
+                            <i class="bi bi-shield-slash"></i>
+                        </div>
+                        <h4 class="mt-3 text-light">ZERO TRUST IoT ENGINE</h4>
+                        <p class="text-muted small">Harmonized CIC-DDoS2019 & BoT-IoT Model</p>
+                    </div>
+                    <div class="border-top border-secondary border-opacity-25 pt-3">
+                        <div class="d-flex justify-content-between small text-muted font-mono mb-1">
+                            <span>MODEL ACCURACY:</span>
+                            <span class="text-success font-bold">{{ (metadata.metrics.accuracy * 100) | round(2) if metadata.metrics else '99.31' }}%</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted font-mono mb-1">
+                            <span>ALGORITHM:</span>
+                            <span class="text-info font-bold">Random Forest</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted font-mono">
+                            <span>ACTIVE THREATS:</span>
+                            <span class="text-danger font-bold">{{ stats.active_threats }} Alerts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Metrics Counter Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-cyan">
+                <div>
+                    <div class="stat-label">Total Packets Analyzed</div>
+                    <div class="stat-value font-mono">{{ "{:,}".format(stats.total_packets) }}</div>
+                </div>
+                <div class="stat-icon cyan">
+                    <i class="bi bi-hdd-network"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-red">
+                <div>
+                    <div class="stat-label">Attacks Detected</div>
+                    <div class="stat-value font-mono text-danger">{{ "{:,}".format(stats.attack_count) }}</div>
+                </div>
+                <div class="stat-icon red">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-green">
+                <div>
+                    <div class="stat-label">Normal Flow Telemetry</div>
+                    <div class="stat-value font-mono text-success">{{ "{:,}".format(stats.normal_count) }}</div>
+                </div>
+                <div class="stat-icon green">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-amber">
+                <div>
+                    <div class="stat-label">Unresolved Threats</div>
+                    <div class="stat-value font-mono text-warning">{{ stats.active_threats }}</div>
+                </div>
+                <div class="stat-icon amber">
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Objectives & Features Grid -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-bullseye"></i>
+                        <span>Project Core Objectives</span>
+                    </h3>
+                    <span class="badge bg-secondary font-mono">COLLEGE CAPSTONE</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                            <h5 class="text-info mb-2"><i class="bi bi-cpu-fill me-2"></i>Multi-Class ML Detection</h5>
+                            <p class="text-muted small mb-0">
+                                Classify incoming IoT network flows into 6 distinct categories: DDoS, DoS, Port Scanning, 
+                                Brute Force, Botnet (Mirai), and Normal telemetry with true calculated confidence.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                            <h5 class="text-info mb-2"><i class="bi bi-broadcast-pin me-2"></i>Live Network Monitoring</h5>
+                            <p class="text-muted small mb-0">
+                                Continuous packet flow streaming with real-time protocol statistics, traffic rate charts, 
+                                and interactive simulated IoT attack injection modes for live defense demos.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                            <h5 class="text-info mb-2"><i class="bi bi-shield-shaded me-2"></i>Automated SOC Alerting</h5>
+                            <p class="text-muted small mb-0">
+                                Instant triage of malicious activities with mapped MITRE ATT&CK techniques, risk severity ratings, 
+                                and one-click alert acknowledgement and incident resolution.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                            <h5 class="text-info mb-2"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Forensic CSV Audits</h5>
+                            <p class="text-muted small mb-0">
+                                Upload large network packet capture (PCAP-derived) CSV traces for automated batch ML classification, 
+                                detailed summary distributions, and downloadable forensic audit logs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>Detection Taxonomy</span>
+                    </h3>
+                    <span class="badge bg-info font-mono">6 CLASSES</span>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-danger border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber critical">CRITICAL</span>
+                            <strong class="text-light">DDoS Attack</strong>
+                        </div>
+                        <span class="text-muted small font-mono">Volumetric Flood (SYN / UDP)</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-warning border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber high">HIGH</span>
+                            <strong class="text-light">DoS Attack</strong>
+                        </div>
+                        <span class="text-muted small font-mono">Slowloris / Resource Starvation</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-danger border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber critical">CRITICAL</span>
+                            <strong class="text-light">Botnet Activity</strong>
+                        </div>
+                        <span class="text-muted small font-mono">Mirai / C2 Command Beacon</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-warning border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber high">HIGH</span>
+                            <strong class="text-light">Brute Force Attack</strong>
+                        </div>
+                        <span class="text-muted small font-mono">SSH / Telnet Credential Assault</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-info border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber medium">MEDIUM</span>
+                            <strong class="text-light">Port Scanning</strong>
+                        </div>
+                        <span class="text-muted small font-mono">Horizontal SYN Reconnaissance</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-dark border border-success border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-cyber safe">SAFE</span>
+                            <strong class="text-light">Normal Traffic</strong>
+                        </div>
+                        <span class="text-muted small font-mono">MQTT / CoAP Sensor Telemetry</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation Matrix -->
+    <div class="cyber-card">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-grid-3x3-gap"></i>
+                <span>Platform Navigation Matrix</span>
+            </h3>
+            <span class="text-muted small font-mono">All 10 Project Modules Fully Integrated</span>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4 col-sm-6">
+                <a href="/dashboard" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon cyan" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">SOC Dashboard</h6>
+                                <div class="text-muted small">Real-time graphs, counts & threat levels</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <a href="/detection" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon green" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-cpu"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">AI Flow Inspector</h6>
+                                <div class="text-muted small">Interactive single-packet classifier</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <a href="/monitoring" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon blue" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-activity"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">Live Monitoring</h6>
+                                <div class="text-muted small">Streaming packet analyzer with attack injection</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <a href="/upload" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon amber" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">Dataset Upload</h6>
+                                <div class="text-muted small">Batch CSV classification & reports</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <a href="/alerts" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon red" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-bell"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">Security Alerts</h6>
+                                <div class="text-muted small">Acknowledge, triage & filter SOC alerts</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <a href="/performance" class="text-decoration-none">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 cyber-card-hover">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="stat-icon cyan" style="width:40px; height:40px; font-size:1.1rem;">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-light mb-1">ML Performance</h6>
+                                <div class="text-muted small">Confusion matrix, accuracy & feature importance</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}AI Cyberattack Detection - Single Flow Inspector{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-cpu text-info me-2"></i>AI CYBERATTACK DETECTION ENGINE
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                RANDOM FOREST MULTI-CLASS FLOW CLASSIFIER &bull; ZERO TRUST IoT INTRUSION INSPECTOR
+            </p>
+        </div>
+        <div>
+            <span class="status-pill">
+                <span class="status-dot green"></span>
+                <span>MODEL ARTIFACT: ACTIVE</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Quick Preset Buttons -->
+    <div class="cyber-card mb-4">
+        <div class="card-header-cyber">
+            <h4 class="card-title-cyber" style="font-size: 1rem;">
+                <i class="bi bi-lightning-charge-fill text-warning"></i>
+                <span>Load Real IoT Flow Presets (For Live Demonstration & Viva)</span>
+            </h4>
+            <span class="text-muted small font-mono">1-Click Auto-Fill</span>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-sm btn-outline-danger font-mono" onclick="loadPreset('ddos')">
+                <i class="bi bi-radioactive me-1"></i>DDoS Flood
+            </button>
+            <button class="btn btn-sm btn-outline-warning font-mono" onclick="loadPreset('dos')">
+                <i class="bi bi-hourglass-split me-1"></i>DoS Slowloris
+            </button>
+            <button class="btn btn-sm btn-outline-danger font-mono" onclick="loadPreset('botnet')">
+                <i class="bi bi-bug me-1"></i>Mirai Botnet C2
+            </button>
+            <button class="btn btn-sm btn-outline-warning font-mono" onclick="loadPreset('bruteforce')">
+                <i class="bi bi-key-fill me-1"></i>SSH Brute Force
+            </button>
+            <button class="btn btn-sm btn-outline-info font-mono" onclick="loadPreset('portscan')">
+                <i class="bi bi-radar me-1"></i>Port Scanning
+            </button>
+            <button class="btn btn-sm btn-outline-success font-mono" onclick="loadPreset('normal')">
+                <i class="bi bi-shield-check me-1"></i>Normal MQTT Telemetry
+            </button>
+            <button class="btn btn-sm btn-outline-secondary font-mono" onclick="resetForm()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Clear
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Input Form -->
+        <div class="col-lg-7">
+            <div class="cyber-card">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-sliders"></i>
+                        <span>Network Flow Telemetry Attributes</span>
+                    </h3>
+                    <span class="badge bg-secondary font-mono">18 FEATURES</span>
+                </div>
+
+                <form id="detectionForm">
+                    <!-- Network IP Metadata -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-cyber-label">Source IP Address</label>
+                            <input type="text" class="form-control form-cyber-control font-mono" id="src_ip" value="192.168.1.105" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-cyber-label">Destination IP Address</label>
+                            <input type="text" class="form-control form-cyber-control font-mono" id="dst_ip" value="10.0.0.1" required>
+                        </div>
+                    </div>
+
+                    <!-- Ports & Protocol -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Protocol</label>
+                            <select class="form-select form-cyber-control font-mono" id="protocol">
+                                <option value="6">TCP (6)</option>
+                                <option value="17">UDP (17)</option>
+                                <option value="1">ICMP (1)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Source Port</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="src_port" value="49210" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Destination Port</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="dst_port" value="80" required>
+                        </div>
+                    </div>
+
+                    <!-- Flow Duration & Rates -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Flow Duration (ms)</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="flow_duration" value="38500" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Flow Bytes / Sec</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="flow_bytes_per_sec" value="28400.5" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Flow Packets / Sec</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="flow_packets_per_sec" value="62.4" required>
+                        </div>
+                    </div>
+
+                    <!-- Packets & Bytes -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">Fwd Packets</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="total_fwd_packets" value="180" required>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">Bwd Packets</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="total_bwd_packets" value="3" required>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">Total Fwd Bytes</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="total_fwd_bytes" value="105200" required>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">Total Bwd Bytes</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="total_bwd_bytes" value="192" required>
+                        </div>
+                    </div>
+
+                    <!-- Packet Length Stats -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Packet Length Mean</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="packet_length_mean" value="584.2" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Packet Length Std</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="packet_length_std" value="122.5" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-cyber-label">Packet Length Max</label>
+                            <input type="number" step="any" class="form-control form-cyber-control font-mono" id="packet_length_max" value="1420" required>
+                        </div>
+                    </div>
+
+                    <!-- Flags & Headers -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">SYN Flag Count</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="syn_flag_count" value="28" required>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-cyber-label">ACK Flag Count</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="ack_flag_count" value="1" required>
+                        </div>
+                        <div class="col-md-2 col-4">
+                            <label class="form-cyber-label">FIN Flags</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="fin_flag_count" value="0" required>
+                        </div>
+                        <div class="col-md-2 col-4">
+                            <label class="form-cyber-label">RST Flags</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="rst_flag_count" value="1" required>
+                        </div>
+                        <div class="col-md-2 col-4">
+                            <label class="form-cyber-label">Header Length</label>
+                            <input type="number" class="form-control form-cyber-control font-mono" id="header_length" value="5760" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between pt-2 border-top border-secondary border-opacity-25">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="saveToHistory" checked>
+                            <label class="form-check-label small text-muted font-mono" for="saveToHistory">
+                                Persist in SQLite Threat History & Alerts
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-cyber-primary px-4 py-2" id="btnPredict">
+                            <i class="bi bi-cpu-fill"></i>
+                            <span>Execute AI Detection</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Result Display HUD -->
+        <div class="col-lg-5">
+            <div class="cyber-card h-100" id="resultCard">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-shield-shaded"></i>
+                        <span>ML Prediction Verdict</span>
+                    </h3>
+                    <span class="badge bg-secondary font-mono" id="detectionTimeBadge">AWAITING INFERENCE</span>
+                </div>
+
+                <div id="resultPlaceholder" class="text-center py-5">
+                    <div class="display-3 text-muted mb-3 opacity-25">
+                        <i class="bi bi-radar"></i>
+                    </div>
+                    <h5 class="text-muted">No Flow Inspected Yet</h5>
+                    <p class="text-muted small px-4">
+                        Select an attack preset or enter network flow attributes on the left, then click 
+                        <strong class="text-info">Execute AI Detection</strong> to run genuine Random Forest classification.
+                    </p>
+                </div>
+
+                <div id="resultContent" style="display: none;">
+                    <!-- Verdict Banner -->
+                    <div class="p-3 rounded text-center mb-3" id="verdictBanner" style="background: rgba(239,68,68,0.15); border: 1px solid #ef4444;">
+                        <span class="badge-cyber mb-2" id="verdictSeverityBadge">CRITICAL</span>
+                        <h2 class="mb-0 font-monospace" id="verdictAttackType" style="color: #ef4444; letter-spacing: 1px;">
+                            DDoS Attack
+                        </h2>
+                    </div>
+
+                    <!-- Confidence & Details -->
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-muted small font-mono">ML CONFIDENCE SCORE:</span>
+                            <span class="text-light fw-bold font-mono" id="verdictConfidence">98.4%</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px; background: rgba(255,255,255,0.1);">
+                            <div class="progress-bar bg-info" id="verdictConfidenceBar" role="progressbar" style="width: 98%"></div>
+                        </div>
+
+                        <div class="row g-2 text-muted small font-mono">
+                            <div class="col-6">
+                                <span class="d-block text-secondary">SOURCE IP:</span>
+                                <strong class="text-light" id="verdictSrcIp">192.168.1.105</strong>
+                            </div>
+                            <div class="col-6">
+                                <span class="d-block text-secondary">TARGET IP:</span>
+                                <strong class="text-light" id="verdictDstIp">10.0.0.1</strong>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <span class="d-block text-secondary">MITRE ATT&CK ID:</span>
+                                <span class="badge bg-secondary font-mono" id="verdictMitre">T1498 (Network DoS)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Multi-Class Probability Distribution Chart -->
+                    <div class="mb-3">
+                        <div class="text-muted small font-mono mb-2">MULTI-CLASS PROBABILITY DISTRIBUTION</div>
+                        <div id="probDistributionList" class="d-flex flex-column gap-2 font-mono small">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Mitigation Recommendation -->
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                        <div class="text-warning small font-mono mb-1"><i class="bi bi-shield-exclamation me-1"></i>RECOMMENDED SOC ACTION:</div>
+                        <div class="text-light small" id="verdictRecommendation">
+                            Activate upstream edge rate-limiting and drop non-whitelisted UDP traffic immediately.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/detection.js') }}"></script>
+{% endblock %}

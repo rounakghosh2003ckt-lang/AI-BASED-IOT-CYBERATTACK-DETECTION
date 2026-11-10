@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI-Based IoT Cyberattack Detection System{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Cyberpunk SOC Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Sidebar Backdrop for Mobile -->
+        <div id="sidebarBackdrop" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1035;"></div>
+
+        <!-- Cyber Sidebar -->
+        <aside class="cyber-sidebar" id="cyberSidebar">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <span class="brand-text">AEGIS-IoT</span>
+                        <span class="brand-sub">AI CYBER DEFENSE SOC</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-category">Command Core</div>
+                <a href="/" class="nav-cyber-item">
+                    <i class="bi bi-house-door"></i>
+                    <span>Overview & Home</span>
+                </a>
+                <a href="/dashboard" class="nav-cyber-item">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>SOC Dashboard</span>
+                </a>
+
+                <div class="menu-category">AI Threat Detection</div>
+                <a href="/detection" class="nav-cyber-item">
+                    <i class="bi bi-cpu"></i>
+                    <span>AI Flow Inspector</span>
+                </a>
+                <a href="/monitoring" class="nav-cyber-item">
+                    <i class="bi bi-activity"></i>
+                    <span>Live IoT Stream</span>
+                </a>
+                <a href="/upload" class="nav-cyber-item">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <span>Batch CSV Analyzer</span>
+                </a>
+
+                <div class="menu-category">Intelligence & SOC</div>
+                <a href="/alerts" class="nav-cyber-item">
+                    <i class="bi bi-bell"></i>
+                    <span>Security Alerts</span>
+                </a>
+                <a href="/history" class="nav-cyber-item">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Attack History Logs</span>
+                </a>
+                <a href="/performance" class="nav-cyber-item">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>ML Model Metrics</span>
+                </a>
+                <a href="/reports" class="nav-cyber-item">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    <span>Threat Reports</span>
+                </a>
+
+                <div class="menu-category">System</div>
+                <a href="/about" class="nav-cyber-item">
+                    <i class="bi bi-info-circle"></i>
+                    <span>About & Viva Guide</span>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small font-mono">SOC THREAT LEVEL</span>
+                    <span class="badge bg-danger font-mono" id="sidebarDefcon">ACTIVE</span>
+                </div>
+                <div class="progress" style="height: 4px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 78%"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle Sidebar">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="d-none d-md-flex align-items-center gap-2">
+                        <span class="status-pill">
+                            <span class="status-dot green"></span>
+                            <span>ENGINE: ONLINE</span>
+                        </span>
+                        <span class="status-pill text-info d-none d-lg-inline-flex">
+                            <i class="bi bi-shield-check me-1"></i>
+                            <span>RANDOM FOREST CLASSIFIER</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="navbar-right">
+                    <div class="font-mono text-muted small d-none d-sm-block" id="liveClock">
+                        --:--:-- UTC
+                    </div>
+                    <a href="/monitoring" class="btn-cyber-primary py-1 px-3" style="font-size: 0.82rem;">
+                        <i class="bi bi-broadcast"></i>
+                        <span>Live Console</span>
+                    </a>
+                    <a href="/detection" class="btn-cyber-outline py-1 px-3" style="font-size: 0.82rem;">
+                        <i class="bi bi-search"></i>
+                        <span>Inspect Flow</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Page Body Content -->
+            <div class="content-body flex-grow-1 p-3 p-md-4">
+                {% if custom_content %}
+                    {{ custom_content | safe }}
+                {% else %}
+                    {% block content %}{% endblock %}
+                {% endif %}
+            </div>
+
+            <!-- Modern Cyber Footer -->
+            <footer class="py-3 px-4 border-top border-secondary border-opacity-10 text-muted small d-flex flex-wrap align-items-center justify-content-between font-mono">
+                <div>
+                    <span>AI-BASED IoT CYBERATTACK DETECTION SYSTEM</span> &bull; 
+                    <span class="text-info">College Capstone Project</span>
+                </div>
+                <div>
+                    <span>Random Forest ML &bull; SQLite DB &bull; Flask &bull; CIC-DDoS2019 / BoT-IoT</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <!-- Core App JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

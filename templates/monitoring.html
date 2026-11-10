@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Live Network Monitoring - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-activity text-info me-2"></i>REAL-TIME IoT NETWORK MONITORING CONSOLE
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                LIVE TRAFFIC INGESTION &bull; MICROSECOND PACKET FLOW CLASSIFICATION &bull; INTRUSION TELEMETRY
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="status-pill">
+                <span class="status-dot green" id="streamStatusDot"></span>
+                <span id="streamStatusText">STREAM: STREAMING LIVE</span>
+            </span>
+            <button class="btn-cyber-primary py-1 px-3" id="btnToggleStream">
+                <i class="bi bi-pause-fill" id="streamIcon"></i>
+                <span id="streamBtnText">Pause Stream</span>
+            </button>
+            <button class="btn-cyber-outline py-1 px-3" id="btnClearStream">
+                <i class="bi bi-trash"></i>
+                <span>Clear Table</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Demonstration Simulation Mode Banner (Mandatory Requirement) -->
+    <div class="simulation-banner mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-warning text-dark font-mono fw-bold">
+                <i class="bi bi-broadcast me-1"></i>DEMONSTRATION SIMULATOR ACTIVE
+            </span>
+            <span class="text-light small">
+                Simulated IoT Network Stream (Separated from host physical interfaces). Packets are fed through the live trained Random Forest ML Engine.
+            </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small font-mono d-none d-md-inline">SCENARIO INJECTION:</span>
+            <select class="form-select form-cyber-control form-select-sm font-mono py-1" id="scenarioSelect" style="width: auto;">
+                <option value="Normal Traffic">Scenario: Normal Sensor Telemetry</option>
+                <option value="DDoS Attack">Inject: Volumetric DDoS Attack</option>
+                <option value="DoS Attack">Inject: Slowloris DoS Attack</option>
+                <option value="Botnet">Inject: Mirai Botnet C2 Infection</option>
+                <option value="Brute Force">Inject: SSH/Telnet Brute Force</option>
+                <option value="Port Scanning">Inject: Port Scanning Recon</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Live Telemetry Counters -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-cyan py-3">
+                <div>
+                    <div class="stat-label">Ingress Packet Rate</div>
+                    <div class="stat-value font-mono" id="livePktRate">42 <span class="fs-6 text-muted">pkts/s</span></div>
+                </div>
+                <div class="stat-icon cyan" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-speedometer"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-blue py-3">
+                <div>
+                    <div class="stat-label">Bandwidth Ingress</div>
+                    <div class="stat-value font-mono text-info" id="liveByteRate">28.4 <span class="fs-6 text-muted">KB/s</span></div>
+                </div>
+                <div class="stat-icon blue" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-hdd-network"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-green py-3">
+                <div>
+                    <div class="stat-label">Verified Legitimate</div>
+                    <div class="stat-value font-mono text-success" id="liveNormalTotal">0</div>
+                </div>
+                <div class="stat-icon green" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-red py-3">
+                <div>
+                    <div class="stat-label">Anomalies Intercepted</div>
+                    <div class="stat-value font-mono text-danger" id="liveAttackTotal">0</div>
+                </div>
+                <div class="stat-icon red" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-shield-x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Rolling Traffic Chart -->
+    <div class="cyber-card mb-4">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-graph-up text-cyan"></i>
+                <span>Live Real-Time IoT Flow Telemetry Activity</span>
+            </h3>
+            <div class="d-flex align-items-center gap-2">
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="chkAutoRecord">
+                    <label class="form-check-label text-muted small font-mono" for="chkAutoRecord">Auto-Record to DB</label>
+                </div>
+            </div>
+        </div>
+        <div style="height: 240px; position: relative;">
+            <canvas id="liveMonitoringChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Live Streaming Packet Table -->
+    <div class="cyber-card">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-terminal font-monospace text-info"></i>
+                <span>Live Flow Ingestion & ML Classification Stream</span>
+            </h3>
+            <span class="badge bg-secondary font-mono" id="streamCounter">0 FLOWS INSPECTED</span>
+        </div>
+        <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+            <table class="table-cyber" id="liveStreamTable">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>IoT Node Name</th>
+                        <th>Source IP:Port</th>
+                        <th>Target IP:Port</th>
+                        <th>Protocol</th>
+                        <th>Packets</th>
+                        <th>Bytes</th>
+                        <th>AI ML Verdict</th>
+                        <th>Confidence</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="liveStreamTbody">
+                    <!-- Flows dynamically prepended here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Packet Inspection Modal -->
+<div class="modal fade" id="packetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border border-secondary">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title font-monospace text-info" id="packetModalTitle">
+                    <i class="bi bi-search me-2"></i>FLOW FORENSIC INSPECTOR
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body font-mono small" id="packetModalBody">
+                <!-- Injected via JS -->
+            </div>
+            <div class="modal-footer border-secondary border-opacity-25">
+                <button type="button" class="btn btn-secondary font-mono" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/monitoring.js') }}"></script>
+{% endblock %}

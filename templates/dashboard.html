@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}SOC Dashboard - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Dashboard Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-shield-shaded text-info me-2"></i>SECURITY OPERATIONS CENTER (SOC) DASHBOARD
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                REAL-TIME IoT NETWORK MONITORING &bull; THREAT TELEMETRY &bull; AI INTRUSION DEFENSE
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="status-pill">
+                <span class="status-dot {{ 'red' if stats.soc_status == 'ELEVATED THREAT' else ('yellow' if stats.soc_status == 'GUARDED' else 'green') }}"></span>
+                <span>STATUS: {{ stats.soc_status }}</span>
+            </span>
+            <button class="btn-cyber-primary py-1 px-3" id="btnRefreshDashboard">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>Refresh Data</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Statistics Counter Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-cyan">
+                <div>
+                    <div class="stat-label">Total Packets</div>
+                    <div class="stat-value font-mono" id="dashTotalPackets">{{ "{:,}".format(stats.total_packets) }}</div>
+                </div>
+                <div class="stat-icon cyan">
+                    <i class="bi bi-stack"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-blue">
+                <div>
+                    <div class="stat-label">Traffic Analyzed</div>
+                    <div class="stat-value font-mono" id="dashTrafficBytes">{{ stats.total_traffic_bytes }} <span class="small fs-6">KB</span></div>
+                </div>
+                <div class="stat-icon blue">
+                    <i class="bi bi-hdd-network"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-green">
+                <div>
+                    <div class="stat-label">Normal Traffic</div>
+                    <div class="stat-value font-mono text-success" id="dashNormalCount">{{ "{:,}".format(stats.normal_count) }}</div>
+                </div>
+                <div class="stat-icon green">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-red">
+                <div>
+                    <div class="stat-label">Malicious Flows</div>
+                    <div class="stat-value font-mono text-danger" id="dashMaliciousCount">{{ "{:,}".format(stats.attack_count) }}</div>
+                </div>
+                <div class="stat-icon red">
+                    <i class="bi bi-radioactive"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-amber">
+                <div>
+                    <div class="stat-label">Active Threats</div>
+                    <div class="stat-value font-mono text-warning" id="dashActiveThreats">{{ stats.active_threats }}</div>
+                </div>
+                <div class="stat-icon amber">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="cyber-card stat-card accent-purple">
+                <div>
+                    <div class="stat-label">Total Detections</div>
+                    <div class="stat-value font-mono text-info" id="dashTotalFlows">{{ "{:,}".format(stats.total_flows) }}</div>
+                </div>
+                <div class="stat-icon cyan">
+                    <i class="bi bi-cpu"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-3 mb-4">
+        <!-- Network Traffic Graph -->
+        <div class="col-lg-8">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-graph-up"></i>
+                        <span>Network Traffic Activity Stream (Packets vs Threats)</span>
+                    </h3>
+                    <span class="badge bg-dark border border-secondary font-mono small">TIMELINE ANALYSIS</span>
+                </div>
+                <div style="height: 320px; position: relative;">
+                    <canvas id="trafficTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attack Distribution Chart -->
+        <div class="col-lg-4">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-pie-chart"></i>
+                        <span>Attack Distribution</span>
+                    </h3>
+                    <span class="badge bg-dark border border-secondary font-mono small">SHARE RATIO</span>
+                </div>
+                <div style="height: 320px; position: relative;">
+                    <canvas id="attackDistChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lower Row: Recent Security Alerts & Quick Actions -->
+    <div class="row g-3">
+        <div class="col-lg-9">
+            <div class="cyber-card">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-bell-fill text-danger"></i>
+                        <span>Recent Critical Security Alerts</span>
+                    </h3>
+                    <a href="/alerts" class="btn-cyber-outline py-1 px-3 small">
+                        <span>View All Alerts</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-cyber">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Severity</th>
+                                <th>Attack Category</th>
+                                <th>Source IP</th>
+                                <th>Destination IP</th>
+                                <th>Confidence</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentAlertsTbody">
+                            {% for alert in stats.recent_alerts %}
+                            <tr>
+                                <td class="font-mono text-muted small">{{ alert.timestamp }}</td>
+                                <td>
+                                    <span class="badge-cyber {{ alert.severity | lower }}">{{ alert.severity }}</span>
+                                </td>
+                                <td><strong class="text-light">{{ alert.attack_type }}</strong></td>
+                                <td><span class="ip-badge">{{ alert.source_ip }}</span></td>
+                                <td><span class="ip-badge">{{ alert.destination_ip }}</span></td>
+                                <td class="font-mono text-info">{{ alert.confidence }}%</td>
+                                <td>
+                                    <span class="badge {{ 'bg-danger' if alert.status == 'New' else ('bg-warning text-dark' if alert.status == 'Acknowledged' else 'bg-success') }} font-mono small">
+                                        {{ alert.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if alert.status != 'Resolved' %}
+                                    <button class="btn btn-sm btn-outline-info py-0 px-2 font-mono small" onclick="quickResolveAlert({{ alert.id }})">
+                                        Resolve
+                                    </button>
+                                    {% else %}
+                                    <span class="text-muted small"><i class="bi bi-check2-all text-success"></i> Done</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">No recent security alerts registered.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-shield-lock"></i>
+                        <span>System Status</span>
+                    </h3>
+                    <span class="badge bg-success font-mono">ACTIVE</span>
+                </div>
+                <div class="d-flex flex-column gap-3">
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                        <div class="text-muted small font-mono">AI ENGINE INFERENCE</div>
+                        <div class="text-success fw-bold mt-1"><i class="bi bi-check-circle-fill me-1"></i> Random Forest Active</div>
+                        <div class="text-muted small mt-1">Latency: ~0.8ms per packet flow</div>
+                    </div>
+
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                        <div class="text-muted small font-mono">DATABASE LOGGING</div>
+                        <div class="text-info fw-bold mt-1"><i class="bi bi-database me-1"></i> SQLite Cluster Persistent</div>
+                        <div class="text-muted small mt-1">Audit trail active and immutable</div>
+                    </div>
+
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                        <div class="text-muted small font-mono">MITIGATION RESPONSE</div>
+                        <div class="text-warning fw-bold mt-1"><i class="bi bi-shield-exclamation me-1"></i> Auto-Quarantine Ready</div>
+                        <div class="text-muted small mt-1">Gateway firewall sync active</div>
+                    </div>
+
+                    <a href="/monitoring" class="btn-cyber-primary text-center justify-content-center mt-2">
+                        <i class="bi bi-broadcast"></i>
+                        <span>Launch Live Stream</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

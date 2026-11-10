@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Intelligence Reports - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+    .cyber-sidebar, .top-navbar, footer, .btn-cyber-primary, .btn-cyber-outline, #printBtnArea {
+        display: none !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+    }
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+    .cyber-card {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+    }
+    .text-light, .text-muted, h1, h2, h3, h4, h5, h6 {
+        color: #000 !important;
+    }
+    .table-cyber th, .table-cyber td {
+        color: #000 !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3" id="printBtnArea">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-file-earmark-bar-graph text-info me-2"></i>EXECUTIVE & TECHNICAL THREAT REPORTS
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                AUDIT LOG COMPLIANCE &bull; INCIDENT POST-MORTEM &bull; PRINTABLE FACULTY REPORT &bull; CSV EXPORTS
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-cyber-outline py-1 px-3" onclick="window.print()">
+                <i class="bi bi-printer me-1"></i>
+                <span>Print / Save PDF</span>
+            </button>
+            <a href="/api/download/history-csv" class="btn-cyber-primary py-1 px-3">
+                <i class="bi bi-download me-1"></i>
+                <span>Download History CSV</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Report Document Card -->
+    <div class="cyber-card mb-4">
+        <div class="border-bottom border-secondary border-opacity-25 pb-3 mb-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="text-light font-monospace mb-1">INCIDENT DETECTION & THREAT ASSESSMENT REPORT</h4>
+                <div class="text-muted small font-mono">
+                    SECURITY OPERATIONS REPORT ID: <span class="text-info">SEC-RPT-2026-IoT-001</span> &bull; 
+                    TARGET: <span class="text-info">IoT CLUSTER INFRASTRUCTURE</span>
+                </div>
+            </div>
+            <div class="text-end font-mono small text-muted">
+                <div>DATE GENERATED: <span class="text-light">{{ stats.recent_alerts[0].timestamp if stats.recent_alerts else '2026-11-10' }}</span></div>
+                <div>CLASSIFICATION: <span class="badge bg-danger">RESTRICTED - SOC INTERNAL</span></div>
+            </div>
+        </div>
+
+        <!-- Executive Summary Highlights -->
+        <h5 class="text-info font-mono mb-3"><i class="bi bi-shield-check me-2"></i>1. EXECUTIVE SUMMARY</h5>
+        <p class="text-light small leading-relaxed">
+            During the operational monitoring cycle, the <strong>AEGIS AI-Based IoT Cyberattack Detection System</strong> analyzed 
+            a total of <strong class="text-info">{{ "{:,}".format(stats.total_packets) }} packets</strong> comprising 
+            <strong class="text-info">{{ "{:,}".format(stats.total_flows) }} bidirectional network flows</strong> 
+            across interconnected IoT endpoints. Machine learning analysis via our serialized Random Forest model identified 
+            <strong class="text-danger">{{ "{:,}".format(stats.attack_count) }} malicious intrusions</strong> and 
+            <strong class="text-success">{{ "{:,}".format(stats.normal_count) }} legitimate telemetry transmissions</strong>, 
+            resulting in an attack prevalence ratio of 
+            <strong class="text-warning">{{ ((stats.attack_count / (stats.total_flows or 1)) * 100) | round(1) }}%</strong>.
+        </p>
+
+        <!-- KPI Breakdown Table -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                    <span class="text-muted small font-mono d-block">TOTAL PACKETS ANALYZED</span>
+                    <h3 class="font-mono text-light mb-0">{{ "{:,}".format(stats.total_packets) }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                    <span class="text-muted small font-mono d-block">TOTAL BANDWIDTH PROCESSED</span>
+                    <h3 class="font-mono text-info mb-0">{{ stats.total_traffic_bytes }} KB</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                    <span class="text-muted small font-mono d-block">MALICIOUS FLOW DETECTIONS</span>
+                    <h3 class="font-mono text-danger mb-0">{{ "{:,}".format(stats.attack_count) }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25">
+                    <span class="text-muted small font-mono d-block">ACTIVE UNRESOLVED THREATS</span>
+                    <h3 class="font-mono text-warning mb-0">{{ stats.active_threats }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attack Distribution Section -->
+        <h5 class="text-info font-mono mb-3"><i class="bi bi-pie-chart me-2"></i>2. THREAT CATEGORY DISTRIBUTION</h5>
+        <div class="table-responsive mb-4">
+            <table class="table-cyber">
+                <thead>
+                    <tr>
+                        <th>Threat Category</th>
+                        <th>Classification</th>
+                        <th>Severity Level</th>
+                        <th>Total Incidents</th>
+                        <th>Ratio (%)</th>
+                        <th>MITRE ATT&CK Mapping</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for atk, count in distribution.items() %}
+                    <tr>
+                        <td><strong class="text-light">{{ atk }}</strong></td>
+                        <td>
+                            <span class="badge {{ 'bg-success' if atk == 'Normal Traffic' else 'bg-danger' }} font-mono small">
+                                {{ 'BENIGN' if atk == 'Normal Traffic' else 'MALICIOUS' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-cyber {{ 'safe' if atk == 'Normal Traffic' else ('critical' if atk in ['DDoS Attack', 'Botnet'] else 'high') }}">
+                                {{ 'Safe' if atk == 'Normal Traffic' else ('Critical' if atk in ['DDoS Attack', 'Botnet'] else 'High') }}
+                            </span>
+                        </td>
+                        <td class="font-mono text-light fw-bold">{{ count }}</td>
+                        <td class="font-mono text-info">{{ ((count / (stats.total_flows or 1)) * 100) | round(1) }}%</td>
+                        <td class="font-mono text-muted small">
+                            {{ 'N/A' if atk == 'Normal Traffic' else ('T1498 (Network DoS)' if atk == 'DDoS Attack' else ('T1584 (Botnet)' if atk == 'Botnet' else ('T1110 (Brute Force)' if atk == 'Brute Force' else 'T1046 (Recon)'))) }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Recommendations & SOC Governance -->
+        <h5 class="text-info font-mono mb-3"><i class="bi bi-shield-lock me-2"></i>3. SOC REMEDIATION STRATEGY</h5>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                    <h6 class="text-warning font-mono mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i>Critical Incident Protocol</h6>
+                    <ul class="text-muted small ps-3 mb-0">
+                        <li class="mb-1"><strong>DDoS Floods:</strong> Enforce rate-limiting on gateway ingress edge and trigger upstream blackholing if traffic exceeds 10,000 pkts/s.</li>
+                        <li class="mb-1"><strong>Botnet C2 Handshakes:</strong> Automatically quarantine compromised nodes (IP Cameras, Thermostats) to VLAN 99. Revoke device JWT tokens.</li>
+                        <li><strong>Brute Force:</strong> Implement 3-attempt lockouts on management ports 22 and 23. Disable Telnet across all endpoints.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 h-100">
+                    <h6 class="text-success font-mono mb-2"><i class="bi bi-check-circle-fill me-1"></i>Defensive Hardening Advice</h6>
+                    <ul class="text-muted small ps-3 mb-0">
+                        <li class="mb-1"><strong>Zero Trust Segmentation:</strong> Isolate sensor telemetry (MQTT 1883 / CoAP 5683) onto micro-segmented subnets.</li>
+                        <li class="mb-1"><strong>Continuous ML Retraining:</strong> Periodically retrain Random Forest models using freshly captured PCAP traces.</li>
+                        <li><strong>Firmware Integrity:</strong> Enable secure boot and cryptographic code signing on all deployed IoT edge gateways.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

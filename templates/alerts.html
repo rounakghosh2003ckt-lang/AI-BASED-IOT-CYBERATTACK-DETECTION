@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Security Alerts - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-bell-fill text-danger me-2"></i>SECURITY OPERATIONS CENTER ALERTS
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                ACTIVE INTRUSION ALERTS &bull; MITRE ATT&CK MAPPED TRIAGE &bull; INCIDENT RESPONSE LOG
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn-cyber-primary py-1 px-3" onclick="batchAlertAction('acknowledge_all')">
+                <i class="bi bi-check2-all"></i>
+                <span>Acknowledge All</span>
+            </button>
+            <button class="btn-cyber-outline py-1 px-3" onclick="batchAlertAction('resolve_all')">
+                <i class="bi bi-shield-check text-success"></i>
+                <span>Resolve All</span>
+            </button>
+            <button class="btn-cyber-danger py-1 px-3" onclick="batchAlertAction('clear_resolved')">
+                <i class="bi bi-trash"></i>
+                <span>Clear Resolved</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Alert Severity Summary Pill Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-red py-3">
+                <div>
+                    <div class="stat-label">Critical Alerts</div>
+                    <div class="stat-value font-mono text-danger" id="countCritical">{{ counts.critical_count or 0 }}</div>
+                </div>
+                <div class="stat-icon red" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-radioactive"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-amber py-3">
+                <div>
+                    <div class="stat-label">High Severity</div>
+                    <div class="stat-value font-mono text-warning" id="countHigh">{{ counts.high_count or 0 }}</div>
+                </div>
+                <div class="stat-icon amber" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-blue py-3">
+                <div>
+                    <div class="stat-label">Medium Severity</div>
+                    <div class="stat-value font-mono text-info" id="countMedium">{{ counts.medium_count or 0 }}</div>
+                </div>
+                <div class="stat-icon blue" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-info-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="cyber-card stat-card accent-cyan py-3">
+                <div>
+                    <div class="stat-label">Total Unresolved</div>
+                    <div class="stat-value font-mono text-light" id="countNew">{{ counts.new_count or 0 }}</div>
+                </div>
+                <div class="stat-icon cyan" style="width:44px; height:44px; font-size:1.2rem;">
+                    <i class="bi bi-bell"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="cyber-card mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary border-opacity-25 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control form-cyber-control" id="searchAlerts" placeholder="Search IP, Attack Type, or Details...">
+                </div>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <select class="form-select form-cyber-control font-mono" id="filterSeverity">
+                    <option value="All">All Severities</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <select class="form-select form-cyber-control font-mono" id="filterStatus">
+                    <option value="All">All Statuses</option>
+                    <option value="New">New</option>
+                    <option value="Acknowledged">Acknowledged</option>
+                    <option value="Resolved">Resolved</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 col-6">
+                <select class="form-select form-cyber-control font-mono" id="filterAttack">
+                    <option value="All">All Attacks</option>
+                    <option value="DDoS Attack">DDoS Attack</option>
+                    <option value="DoS Attack">DoS Attack</option>
+                    <option value="Botnet">Botnet</option>
+                    <option value="Brute Force">Brute Force</option>
+                    <option value="Port Scanning">Port Scanning</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 col-6 text-end">
+                <button class="btn-cyber-primary w-100 justify-content-center" id="btnFilterAlerts">
+                    <i class="bi bi-funnel"></i>
+                    <span>Apply Filter</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Table -->
+    <div class="cyber-card">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-shield-exclamation text-danger"></i>
+                <span>Security Alert Triage Ledger</span>
+            </h3>
+            <span class="badge bg-secondary font-mono" id="alertsTotalBadge">Loading...</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-cyber">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Timestamp</th>
+                        <th>Severity</th>
+                        <th>Attack Category</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Confidence</th>
+                        <th>MITRE ATT&CK</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="alertsTbody">
+                    <!-- Populated via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary border-opacity-10">
+            <span class="text-muted small font-mono" id="paginationInfo">Showing alerts</span>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-secondary font-mono" id="btnPrevPage" disabled>
+                    <i class="bi bi-chevron-left me-1"></i>Previous
+                </button>
+                <button class="btn btn-sm btn-outline-secondary font-mono" id="btnNextPage" disabled>
+                    Next<i class="bi bi-chevron-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

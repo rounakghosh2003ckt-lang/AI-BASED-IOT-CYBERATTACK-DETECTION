@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}About Project & College Viva Guide - AI-Based IoT Cyberattack Detection System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="text-light mb-1">
+                <i class="bi bi-info-circle text-info me-2"></i>PROJECT DOCUMENTATION & COLLEGE VIVA GUIDE
+            </h2>
+            <p class="text-muted small font-mono mb-0">
+                SYSTEM ARCHITECTURE &bull; MACHINE LEARNING METHODOLOGY &bull; VIVA QUESTIONS & ANSWERS &bull; REFERENCES
+            </p>
+        </div>
+        <div>
+            <span class="badge bg-primary font-mono px-3 py-2">COLLEGE FINAL YEAR CAPSTONE</span>
+        </div>
+    </div>
+
+    <!-- Project Overview & Problem Statement -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-file-text"></i>
+                        <span>1. Project Overview & Motivation</span>
+                    </h3>
+                </div>
+                <p class="text-light small leading-relaxed mb-3">
+                    The <strong>AI-Based IoT Cyberattack Detection System (AEGIS-IoT)</strong> is a cutting-edge 
+                    cybersecurity platform designed to safeguard resource-constrained Internet-of-Things (IoT) environments 
+                    from sophisticated multi-stage cyber threats. 
+                </p>
+                <p class="text-muted small leading-relaxed mb-0">
+                    With billions of interconnected IoT nodes deployed globally across smart homes, industrial plants, 
+                    hospitals, and smart cities, IoT networks have become prime targets for malicious actors. AEGIS-IoT 
+                    bridges the gap between complex network flow telemetry and real-time defense through an intelligent, 
+                    explainable Machine Learning pipeline paired with an enterprise Security Operations Center (SOC) dashboard.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-exclamation-octagon"></i>
+                        <span>2. Problem Statement</span>
+                    </h3>
+                </div>
+                <div class="d-flex flex-column gap-2 text-muted small">
+                    <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                        <strong class="text-danger d-block mb-1">Resource Constraints:</strong>
+                        IoT devices (microcontrollers, sensors, smart bulbs) lack the CPU, RAM, and battery power to run traditional heavy endpoint antivirus software.
+                    </div>
+                    <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                        <strong class="text-warning d-block mb-1">Insecure Default Configurations:</strong>
+                        Many consumer and commercial IoT devices ship with hardcoded credentials (admin/admin), unpatched firmware, and exposed Telnet/SSH ports.
+                    </div>
+                    <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+                        <strong class="text-info d-block mb-1">Weaponization as Botnets:</strong>
+                        Compromised IoT devices are weaponized into massive botnet armies (e.g., Mirai, Gafgyt) capable of launching crippling multi-terabit DDoS assaults.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Architecture Diagram Card -->
+    <div class="cyber-card mb-4">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>3. End-to-End System Architecture</span>
+            </h3>
+            <span class="badge bg-secondary font-mono">FLOW PIPELINE</span>
+        </div>
+        <div class="row g-3 text-center my-2">
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-cyan border-opacity-25 h-100">
+                    <div class="display-6 text-info mb-2"><i class="bi bi-hdd-network"></i></div>
+                    <h6 class="text-light mb-1">Phase 1: Ingestion</h6>
+                    <p class="text-muted small mb-0">Captures network traffic traces (PCAP / live sockets) from IoT sensors & edge gateways.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-cyan border-opacity-25 h-100">
+                    <div class="display-6 text-info mb-2"><i class="bi bi-funnel-fill"></i></div>
+                    <h6 class="text-light mb-1">Phase 2: Preprocessing</h6>
+                    <p class="text-muted small mb-0">Calculates 18 flow statistical features (rates, durations, flag ratios) & standardizes scales.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-cyan border-opacity-25 h-100">
+                    <div class="display-6 text-info mb-2"><i class="bi bi-cpu-fill"></i></div>
+                    <h6 class="text-light mb-1">Phase 3: ML Inference</h6>
+                    <p class="text-muted small mb-0">Random Forest Classifier predicts attack class & outputs true probability distribution.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="p-3 rounded bg-dark border border-cyan border-opacity-25 h-100">
+                    <div class="display-6 text-info mb-2"><i class="bi bi-shield-check"></i></div>
+                    <h6 class="text-light mb-1">Phase 4: SOC Response</h6>
+                    <p class="text-muted small mb-0">Dispatches MITRE-mapped alerts, updates SQLite records, and renders real-time telemetry.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Stack & Machine Learning Rationale -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-layers-half"></i>
+                        <span>4. Technology Stack Justification</span>
+                    </h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-cyber">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Technology</th>
+                                <th>Purpose in Architecture</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono small">
+                            <tr>
+                                <td class="text-info">Backend Server</td>
+                                <td class="text-light">Python Flask 3.1</td>
+                                <td class="text-muted">Lightweight, modular RESTful API microservice</td>
+                            </tr>
+                            <tr>
+                                <td class="text-info">Machine Learning</td>
+                                <td class="text-light">Scikit-Learn 1.9 & Pandas</td>
+                                <td class="text-muted">High-performance Random Forest pipeline & preprocessing</td>
+                            </tr>
+                            <tr>
+                                <td class="text-info">Model Serialization</td>
+                                <td class="text-light">Joblib Binary</td>
+                                <td class="text-muted">Sub-millisecond model deserialization into memory</td>
+                            </tr>
+                            <tr>
+                                <td class="text-info">Database</td>
+                                <td class="text-light">SQLite 3 (Embedded)</td>
+                                <td class="text-muted">Zero-config, fast relational persistence for SOC alerts</td>
+                            </tr>
+                            <tr>
+                                <td class="text-info">Frontend UI</td>
+                                <td class="text-light">Bootstrap 5 + Custom CSS</td>
+                                <td class="text-muted">Dark Cyberpunk SOC styling with full responsive layout</td>
+                            </tr>
+                            <tr>
+                                <td class="text-info">Data Visuals</td>
+                                <td class="text-light">Chart.js 4.4</td>
+                                <td class="text-muted">Reactive live line, bar, and doughnut charts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="cyber-card h-100">
+                <div class="card-header-cyber">
+                    <h3 class="card-title-cyber">
+                        <i class="bi bi-lightbulb-fill text-warning"></i>
+                        <span>5. Why Random Forest Classifier?</span>
+                    </h3>
+                </div>
+                <p class="text-light small leading-relaxed">
+                    While Deep Neural Networks (CNN/LSTM) are powerful, <strong>Random Forest</strong> was specifically selected for IoT intrusion detection due to compelling architectural advantages:
+                </p>
+                <ul class="text-muted small ps-3">
+                    <li class="mb-2">
+                        <strong class="text-info">Ultra-Low Latency Inference:</strong>
+                        Deciding through decision trees requires mere microseconds (&lt;1ms), making it viable on edge routers where deep learning would cause unacceptable packet queuing.
+                    </li>
+                    <li class="mb-2">
+                        <strong class="text-info">Non-Linear Flow Boundary Separation:</strong>
+                        Network features (SYN flags, packet lengths, flow durations) exhibit sharp threshold transitions that orthogonal decision splits capture better than hyperplanes.
+                    </li>
+                    <li class="mb-2">
+                        <strong class="text-info">Resistance to Overfitting:</strong>
+                        Bootstrap aggregation (bagging) and random feature sub-sampling prevent trees from memorizing noise.
+                    </li>
+                    <li class="mb-2">
+                        <strong class="text-info">Explainable Feature Importances:</strong>
+                        Outputs concrete Gini impurity metrics, allowing security analysts to inspect exactly which flow attributes triggered the alert.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- College Viva Q&A Guide -->
+    <div class="cyber-card mb-4">
+        <div class="card-header-cyber">
+            <h3 class="card-title-cyber">
+                <i class="bi bi-patch-question-fill text-warning"></i>
+                <span>6. College Viva Q&A Master Cheat Sheet (For Faculty Presentation)</span>
+            </h3>
+            <span class="badge bg-warning text-dark font-mono">HIGH-YIELD VIVA QUESTIONS</span>
+        </div>
+
+        <div class="accordion accordion-flush" id="vivaAccordion">
+            <div class="accordion-item bg-dark border-secondary border-opacity-25 mb-2 rounded">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-dark text-info font-mono collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viva1">
+                        Q1: What dataset does this system use and what are its key features?
+                    </button>
+                </h2>
+                <div id="viva1" class="accordion-collapse collapse" data-bs-parent="#vivaAccordion">
+                    <div class="accordion-body text-light small">
+                        <strong>Answer:</strong> The system is trained on a harmonized dataset based on the benchmark 
+                        <strong>CIC-DDoS2019 and BoT-IoT datasets</strong>. It utilizes 18 critical network flow features including 
+                        <code>flow_duration</code>, <code>flow_bytes_per_sec</code>, <code>flow_packets_per_sec</code>, 
+                        <code>total_fwd_packets</code>, <code>packet_length_mean</code>, <code>syn_flag_count</code>, and protocol IDs. 
+                        These features capture volumetric spikes, connection asymmetry, and scanning behaviors.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-dark border-secondary border-opacity-25 mb-2 rounded">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-dark text-info font-mono collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viva2">
+                        Q2: How does the system handle imbalanced or missing network traffic data?
+                    </button>
+                </h2>
+                <div id="viva2" class="accordion-collapse collapse" data-bs-parent="#vivaAccordion">
+                    <div class="accordion-body text-light small">
+                        <strong>Answer:</strong> During data preprocessing, infinite values and NaNs are replaced using median imputation 
+                        to prevent skewed distributions. Stratified sampling (<code>stratify=y</code>) is enforced during the 80/20 train-test split 
+                        to guarantee proportional representation across all 6 attack classes. StandardScaler is applied to normalize numeric features.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-dark border-secondary border-opacity-25 mb-2 rounded">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-dark text-info font-mono collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viva3">
+                        Q3: How are the predictions calculated and why are they not fabricated?
+                    </button>
+                </h2>
+                <div id="viva3" class="accordion-collapse collapse" data-bs-parent="#vivaAccordion">
+                    <div class="accordion-body text-light small">
+                        <strong>Answer:</strong> Every prediction executes genuine Scikit-Learn inference. When an input packet arrives, 
+                        it is scaled by the persisted <code>StandardScaler</code>, fed into the <code>RandomForestClassifier</code>, and evaluated. 
+                        The confidence score represents the actual maximum posterior probability across the 100 ensemble trees (<code>clf.predict_proba()</code>). 
+                        Metrics on the Performance page are calculated directly from a genuine 20% test partition.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-dark border-secondary border-opacity-25 mb-2 rounded">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-dark text-info font-mono collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viva4">
+                        Q4: What is the difference between DoS and DDoS in an IoT context?
+                    </button>
+                </h2>
+                <div id="viva4" class="accordion-collapse collapse" data-bs-parent="#vivaAccordion">
+                    <div class="accordion-body text-light small">
+                        <strong>Answer:</strong> In <strong>DoS (Denial of Service)</strong>, an attack originates from a single source host aiming to exhaust 
+                        a target endpoint's connection pool (e.g. Slowloris keep-alive sockets). In <strong>DDoS (Distributed Denial of Service)</strong>, 
+                        thousands of compromised IoT devices (botnets) simultaneously flood target servers with volumetric UDP or SYN packets, 
+                        overwhelming upstream edge network bandwidth.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item bg-dark border-secondary border-opacity-25 rounded">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-dark text-info font-mono collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#viva5">
+                        Q5: What is the future scope of this project?
+                    </button>
+                </h2>
+                <div id="viva5" class="accordion-collapse collapse" data-bs-parent="#vivaAccordion">
+                    <div class="accordion-body text-light small">
+                        <strong>Answer:</strong> Future extensions include:
+                        1) <strong>Federated Learning</strong> to train collaborative models across distributed IoT gateways without centralizing raw private data; 
+                        2) <strong>Edge deployment</strong> using TinyML / ONNX Runtime on microcontrollers (Raspberry Pi / ESP32); 
+                        3) <strong>Autonomous SDN Mitigation</strong> via OpenFlow controller integration to dynamically drop malicious flows at switch level.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

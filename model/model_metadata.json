@@ -1,0 +1,230 @@
+{
+    "model_name": "Random Forest Classifier",
+    "algorithm": "sklearn.ensemble.RandomForestClassifier",
+    "dataset_name": "CIC-DDoS2019 / BoT-IoT Harmonized IoT Feature Set",
+    "dataset_rows": 10800,
+    "dataset_features": 18,
+    "train_samples": 8640,
+    "test_samples": 2160,
+    "trained_at": "2026-11-10 10:41:27",
+    "training_time_seconds": 0.7,
+    "classes": [
+        "Botnet",
+        "Brute Force",
+        "DDoS Attack",
+        "DoS Attack",
+        "Normal Traffic",
+        "Port Scanning"
+    ],
+    "feature_columns": [
+        "flow_duration",
+        "protocol",
+        "src_port",
+        "dst_port",
+        "total_fwd_packets",
+        "total_bwd_packets",
+        "total_fwd_bytes",
+        "total_bwd_bytes",
+        "packet_length_mean",
+        "packet_length_std",
+        "packet_length_max",
+        "flow_bytes_per_sec",
+        "flow_packets_per_sec",
+        "syn_flag_count",
+        "ack_flag_count",
+        "fin_flag_count",
+        "rst_flag_count",
+        "header_length"
+    ],
+    "metrics": {
+        "accuracy": 0.9931,
+        "precision_macro": 0.9931,
+        "precision_weighted": 0.9932,
+        "recall_macro": 0.9931,
+        "recall_weighted": 0.9931,
+        "f1_macro": 0.993,
+        "f1_weighted": 0.9931
+    },
+    "confusion_matrix": [
+        [
+            352,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        [
+            4,
+            360,
+            0,
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            359,
+            6,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            0,
+            353,
+            0,
+            0
+        ],
+        [
+            0,
+            0,
+            0,
+            4,
+            358,
+            0
+        ],
+        [
+            1,
+            0,
+            0,
+            0,
+            0,
+            363
+        ]
+    ],
+    "classification_report": {
+        "Botnet": {
+            "precision": 0.9859943977591037,
+            "recall": 1.0,
+            "f1-score": 0.9929478138222849,
+            "support": 352.0
+        },
+        "Brute Force": {
+            "precision": 1.0,
+            "recall": 0.989010989010989,
+            "f1-score": 0.994475138121547,
+            "support": 364.0
+        },
+        "DDoS Attack": {
+            "precision": 1.0,
+            "recall": 0.9835616438356164,
+            "f1-score": 0.9917127071823204,
+            "support": 365.0
+        },
+        "DoS Attack": {
+            "precision": 0.9724517906336089,
+            "recall": 1.0,
+            "f1-score": 0.9860335195530726,
+            "support": 353.0
+        },
+        "Normal Traffic": {
+            "precision": 1.0,
+            "recall": 0.988950276243094,
+            "f1-score": 0.9944444444444445,
+            "support": 362.0
+        },
+        "Port Scanning": {
+            "precision": 1.0,
+            "recall": 0.9972527472527473,
+            "f1-score": 0.9986244841815681,
+            "support": 364.0
+        },
+        "accuracy": 0.9930555555555556,
+        "macro avg": {
+            "precision": 0.9930743647321187,
+            "recall": 0.9931292760570744,
+            "f1-score": 0.9930396845508729,
+            "support": 2160.0
+        },
+        "weighted avg": {
+            "precision": 0.9932155139374391,
+            "recall": 0.9930555555555556,
+            "f1-score": 0.9930739594428002,
+            "support": 2160.0
+        }
+    },
+    "feature_importances": [
+        {
+            "feature": "packet_length_max",
+            "importance": 19.92
+        },
+        {
+            "feature": "header_length",
+            "importance": 13.38
+        },
+        {
+            "feature": "total_fwd_packets",
+            "importance": 13.32
+        },
+        {
+            "feature": "syn_flag_count",
+            "importance": 12.3
+        },
+        {
+            "feature": "total_fwd_bytes",
+            "importance": 12.2
+        },
+        {
+            "feature": "total_bwd_bytes",
+            "importance": 4.45
+        },
+        {
+            "feature": "ack_flag_count",
+            "importance": 4.1
+        },
+        {
+            "feature": "total_bwd_packets",
+            "importance": 3.88
+        },
+        {
+            "feature": "dst_port",
+            "importance": 3.6
+        },
+        {
+            "feature": "rst_flag_count",
+            "importance": 3.36
+        },
+        {
+            "feature": "packet_length_mean",
+            "importance": 3.06
+        },
+        {
+            "feature": "packet_length_std",
+            "importance": 2.7
+        },
+        {
+            "feature": "flow_bytes_per_sec",
+            "importance": 1.39
+        },
+        {
+            "feature": "fin_flag_count",
+            "importance": 1.16
+        },
+        {
+            "feature": "flow_duration",
+            "importance": 0.69
+        },
+        {
+            "feature": "flow_packets_per_sec",
+            "importance": 0.28
+        },
+        {
+            "feature": "src_port",
+            "importance": 0.1
+        },
+        {
+            "feature": "protocol",
+            "importance": 0.09
+        }
+    ],
+    "hyperparameters": {
+        "n_estimators": 100,
+        "max_depth": 16,
+        "min_samples_split": 4,
+        "min_samples_leaf": 2,
+        "random_state": 42
+    }
+}
