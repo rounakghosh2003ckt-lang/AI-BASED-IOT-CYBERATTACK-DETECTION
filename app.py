@@ -28,7 +28,8 @@ from backend.database import (
     get_dashboard_stats,
     get_traffic_trend,
     get_attack_distribution,
-    export_history_as_csv_string
+    export_history_as_csv_string,
+    clear_all_telemetry
 )
 from backend.ml_engine import IoTModelEngine
 from backend.simulator import get_simulator
@@ -100,7 +101,9 @@ def reports_page():
     """Module 9: REPORTS"""
     stats = get_dashboard_stats()
     dist = get_attack_distribution()
-    return render_template("reports.html", stats=stats, distribution=dist)
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    report_id = f"SEC-RPT-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:6].upper()}"
+    return render_template("reports.html", stats=stats, distribution=dist, generated_at=now_str, report_id=report_id)
 
 @app.route("/about")
 def about_page():
@@ -171,7 +174,7 @@ def api_predict_single():
 @app.route("/api/monitoring/stream", methods=["GET"])
 def api_monitoring_stream():
     """Generates next live packet telemetry from IoT simulator."""
-    record = request.args.get("record", "false").lower() == "true"
+    record = request.args.get("record", "true").lower() == "true"
     scenario = request.args.get("scenario", None)
     packet = simulator.generate_flow_packet(scenario_override=scenario, record_to_db=record)
     return jsonify({"success": True, "packet": packet})
@@ -182,6 +185,23 @@ def api_monitoring_scenario():
     scenario = data.get("scenario", "Normal Traffic")
     success = simulator.set_scenario(scenario)
     return jsonify({"success": success, "current_scenario": simulator.active_mode})
+
+@app.route("/api/telemetry/reset", methods=["POST"])
+def api_telemetry_reset():
+    """Reset/clear all database telemetry to start with a pristine live slate."""
+    clear_all_telemetry()
+    return jsonify({"success": True, "message": "All telemetry and alerts reset successfully."})
+
+@app.route("/api/simulator/toggle", methods=["POST"])
+def api_simulator_toggle():
+    """Toggle background live traffic generation daemon."""
+    data = request.get_json() or {}
+    enable = data.get("enable", not simulator.live_daemon_running)
+    if enable:
+        simulator.start_live_daemon(interval=float(data.get("interval", 2.5)))
+    else:
+        simulator.stop_live_daemon()
+    return jsonify({"success": True, "running": simulator.live_daemon_running})
 
 
 # --- DATASET UPLOAD & BATCH PREDICTION APIS ---
@@ -396,6 +416,8 @@ def internal_error(error):
     return jsonify({"success": False, "error": "Internal Cybersecurity SOC Engine Error"}), 500
 
 if __name__ == "__main__":
-    print("[*] Starting AI IoT Cyberattack Detection System...")
+    print("[*] Starting AI IoT Cyberattack Detection System (AEGIS-IoT)...")
     print("[*] Web Console: http://127.0.0.1:5000")
+    if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+        simulator.start_live_daemon(interval=2.5)
     app.run(host="0.0.0.0", port=5000, debug=True)

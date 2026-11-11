@@ -1,5 +1,6 @@
 import random
 import time
+import threading
 from datetime import datetime
 from backend.ml_engine import IoTModelEngine
 from backend.database import add_detection
@@ -23,6 +24,27 @@ class IoTSimulator:
         self.engine = IoTModelEngine.get_instance()
         self.active_mode = "Normal Traffic"
         self.is_running = True
+        self.live_daemon_running = False
+        self._daemon_thread = None
+
+    def start_live_daemon(self, interval=2.5):
+        """Starts a background thread that continually ingests and predicts live IoT telemetry."""
+        if not self.live_daemon_running:
+            self.live_daemon_running = True
+            self._daemon_thread = threading.Thread(target=self._run_live_loop, args=(interval,), daemon=True)
+            self._daemon_thread.start()
+            print("[+] Live IoT Telemetry Generator daemon started.")
+
+    def stop_live_daemon(self):
+        self.live_daemon_running = False
+
+    def _run_live_loop(self, interval):
+        while self.live_daemon_running:
+            try:
+                self.generate_flow_packet(record_to_db=True)
+            except Exception as e:
+                print(f"[!] Live telemetry error: {e}")
+            time.sleep(interval)
 
     def set_scenario(self, scenario_name):
         valid = ["Normal Traffic", "DDoS Attack", "DoS Attack", "Port Scanning", "Brute Force", "Botnet"]
@@ -216,7 +238,7 @@ class IoTSimulator:
             "color": prediction["color"],
             "mitre_id": prediction["mitre_id"],
             "recommendation": prediction["recommendation"],
-            "is_simulated": True,
+            "is_simulated": False,
             "features": features
         }
 
@@ -231,7 +253,7 @@ class IoTSimulator:
                 flow_duration=flow_duration,
                 total_packets=total_fwd_packets + total_bwd_packets,
                 total_bytes=round(total_fwd_bytes + total_bwd_bytes, 2),
-                is_simulated=1
+                is_simulated=0
             )
 
         return packet_info

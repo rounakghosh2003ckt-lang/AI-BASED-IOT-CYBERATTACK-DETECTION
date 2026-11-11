@@ -23,6 +23,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const resetBtn = document.getElementById("btnResetTelemetry");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+            if (!confirm("Are you sure you want to clear all telemetry & security alerts to start a fresh live session?")) return;
+            fetch("/api/telemetry/reset", { method: "POST" })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showCyberToast("Session Reset", "All historical records wiped. System is in pristine live state.", "info");
+                        loadDashboardData();
+                    }
+                })
+                .catch(err => showCyberToast("Error", "Could not reset telemetry.", "error"));
+        });
+    }
+
     // Auto refresh every 20 seconds
     setInterval(loadDashboardData, 20000);
 });
@@ -101,7 +117,7 @@ function initAttackDistChart() {
         data: {
             labels: ["Normal Traffic", "DDoS Attack", "DoS Attack", "Port Scanning", "Brute Force", "Botnet"],
             datasets: [{
-                data: [40, 15, 15, 10, 10, 10],
+                data: [0, 0, 0, 0, 0, 0],
                 backgroundColor: [
                     "#10b981", // Normal
                     "#ef4444", // DDoS

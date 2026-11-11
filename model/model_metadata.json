@@ -6,8 +6,8 @@
     "dataset_features": 18,
     "train_samples": 8640,
     "test_samples": 2160,
-    "trained_at": "2026-11-10 10:41:27",
-    "training_time_seconds": 0.7,
+    "trained_at": "2026-11-11 19:57:05",
+    "training_time_seconds": 0.39,
     "classes": [
         "Botnet",
         "Brute Force",

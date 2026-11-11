@@ -62,55 +62,7 @@ def init_db():
     """)
 
     conn.commit()
-
-    # Check if we should seed default demonstration data
-    cursor.execute("SELECT COUNT(*) FROM detection_history")
-    history_count = cursor.fetchone()[0]
-
-    if history_count == 0:
-        seed_initial_data(conn)
-
     conn.close()
-
-def seed_initial_data(conn):
-    cursor = conn.cursor()
-    now = datetime.now()
-
-    sample_attacks = [
-        ("DDoS Attack", "Critical", "TCP", "192.168.1.105", "10.0.0.1", 99.4, "T1498 (Network DoS)", "Volumetric SYN Flood detected: 14,200 pkts/s targeting IoT gateway port 80"),
-        ("Port Scanning", "Medium", "TCP", "192.168.1.189", "10.0.0.15", 98.7, "T1046 (Network Discovery)", "Rapid horizontal TCP SYN probe on ports 1-1024 from unauthorized device"),
-        ("Botnet", "Critical", "TCP", "192.168.1.144", "185.190.140.23", 99.8, "T1584 (Botnet C2)", "Outbound Mirai C2 beacon handshake on port 6667 detected from Smart Camera"),
-        ("Brute Force", "High", "TCP", "192.168.1.202", "10.0.0.4", 97.2, "T1110 (Brute Force)", "Over 45 failed SSH login attempts within 10 seconds on IoT Hub"),
-        ("DoS Attack", "High", "TCP", "192.168.1.173", "10.0.0.1", 96.5, "T1499 (Endpoint DoS)", "Slowloris persistent connection pool exhaustion attempt on web management server"),
-        ("Normal Traffic", "Safe", "UDP", "192.168.1.112", "10.0.0.1", 99.1, "N/A", "Normal MQTT sensor publish from Smart Thermostat to Broker (Port 1883)")
-    ]
-
-    # Preload alerts
-    for i in range(12):
-        atk = sample_attacks[i % len(sample_attacks)]
-        if atk[0] == "Normal Traffic":
-            continue
-        t = now - timedelta(minutes=(i * 14 + random.randint(2, 8)))
-        status = "New" if i < 4 else ("Acknowledged" if i < 8 else "Resolved")
-        cursor.execute("""
-            INSERT INTO alerts (timestamp, attack_type, severity, source_ip, destination_ip, protocol, confidence, details, status, mitre_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (t.strftime("%Y-%m-%d %H:%M:%S"), atk[0], atk[1], atk[3], atk[4], atk[2], atk[5], atk[7], status, atk[6]))
-
-    # Preload 85 detection history rows spanning last 24 hours
-    for i in range(85):
-        atk = sample_attacks[i % len(sample_attacks)]
-        t = now - timedelta(minutes=(i * 16 + random.randint(1, 10)))
-        dur = round(random.uniform(50, 45000), 2)
-        pkts = random.randint(2, 350)
-        bytes_cnt = round(pkts * random.uniform(60, 600), 2)
-        cursor.execute("""
-            INSERT INTO detection_history (timestamp, source_ip, destination_ip, attack_type, confidence, severity, protocol, flow_duration, total_packets, total_bytes, is_simulated)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (t.strftime("%Y-%m-%d %H:%M:%S"), atk[3], atk[4], atk[0], atk[5], atk[1], atk[2], dur, pkts, bytes_cnt, 1))
-
-    conn.commit()
-    print("[+] SQLite database initialized and seeded with demo SOC security telemetry.")
 
 def add_detection(source_ip, destination_ip, attack_type, confidence, severity, protocol="TCP", flow_duration=100.0, total_packets=1, total_bytes=64.0, is_simulated=0):
     conn = get_db_connection()
@@ -329,10 +281,16 @@ def get_traffic_trend():
     rows = cursor.fetchall()
     conn.close()
 
-    rows = list(reversed(rows))
-    labels = [r["time_slot"] for r in rows] or ["10:00", "10:15", "10:30", "10:45", "11:00", "11:15"]
-    normal_data = [r["normal_pkts"] for r in rows] or [12, 19, 15, 25, 22, 30]
-    attack_data = [r["attack_pkts"] for r in rows] or [2, 5, 1, 8, 4, 3]
+    if rows:
+        rows = list(reversed(rows))
+        labels = [r["time_slot"] for r in rows]
+        normal_data = [int(r["normal_pkts"]) for r in rows]
+        attack_data = [int(r["attack_pkts"]) for r in rows]
+    else:
+        now = datetime.now()
+        labels = [(now - timedelta(minutes=(5 - i) * 2)).strftime("%H:%M") for i in range(6)]
+        normal_data = [0] * 6
+        attack_data = [0] * 6
 
     return {
         "labels": labels,
@@ -377,3 +335,15 @@ def export_history_as_csv_string():
 
     output.seek(0)
     return output.getvalue()
+
+def clear_all_telemetry():
+    """Wipes all alerts and detection history to reset to a pristine live state."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM alerts")
+    cursor.execute("DELETE FROM detection_history")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name IN ('alerts', 'detection_history')")
+    conn.commit()
+    conn.close()
+    return True
+

@@ -62,12 +62,12 @@
             <div>
                 <h4 class="text-light font-monospace mb-1">INCIDENT DETECTION & THREAT ASSESSMENT REPORT</h4>
                 <div class="text-muted small font-mono">
-                    SECURITY OPERATIONS REPORT ID: <span class="text-info">SEC-RPT-2026-IoT-001</span> &bull; 
+                    SECURITY OPERATIONS REPORT ID: <span class="text-info">{{ report_id or 'SEC-RPT-LIVE' }}</span> &bull; 
                     TARGET: <span class="text-info">IoT CLUSTER INFRASTRUCTURE</span>
                 </div>
             </div>
             <div class="text-end font-mono small text-muted">
-                <div>DATE GENERATED: <span class="text-light">{{ stats.recent_alerts[0].timestamp if stats.recent_alerts else '2026-11-10' }}</span></div>
+                <div>DATE GENERATED: <span class="text-light">{{ generated_at or (stats.recent_alerts[0].timestamp if stats.recent_alerts else 'Live Session') }}</span></div>
                 <div>CLASSIFICATION: <span class="badge bg-danger">RESTRICTED - SOC INTERNAL</span></div>
             </div>
         </div>

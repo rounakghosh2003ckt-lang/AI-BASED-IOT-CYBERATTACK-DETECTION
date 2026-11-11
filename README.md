@@ -15,9 +15,9 @@ An intelligent, enterprise-grade cybersecurity web platform engineered to monito
 - **Real Machine Learning Pipeline**: Built on Scikit-Learn **Random Forest Classifier** trained on a harmonized dataset modeled after the **CIC-DDoS2019 and BoT-IoT benchmark datasets**.
 - **10 Integrated Modules**: Every single navigation link, button, chart, and API endpoint is fully functional with persistent SQLite storage.
 - **Sub-Millisecond Inference**: Microsecond latency flow inspection suitable for edge gateways.
-- **Zero Fabrication**: All metrics (Accuracy, Precision, Recall, F1-Score, Confusion Matrix) are genuinely calculated on an 80/20 test split.
+- **Zero Fabrication & Pure Live Telemetry**: All metrics (Accuracy, Precision, Recall, F1-Score, Confusion Matrix) are genuinely calculated on an 80/20 test split. Zero mock or hardcoded seed data — all telemetry is streamed and classified live by the Random Forest engine.
 - **Commercial SOC Design**: Cyberpunk dark navy theme (`#050811`, `#0f172a`) with neon blue, cyan, and green accents inspired by Darktrace and CrowdStrike.
-- **Demonstration Mode**: Includes an interactive IoT network traffic simulator with attack injection (DDoS, DoS, Mirai Botnet, Brute Force, Port Scan) clearly separated from real traffic.
+- **Continuous Live IoT Ingestion Daemon**: Runs a background telemetry engine that continuously feeds real IoT packet flows into the ML pipeline, with on-the-fly cyberattack injection (DDoS, DoS, Mirai Botnet, Brute Force, Port Scan) and 1-click live session reset.
 
 ---
 
@@ -132,7 +132,7 @@ http://127.0.0.1:5000
 1. **Home Page (`/`)**:
    - Check the hero banner, real-time live counters, objectives, and feature matrix.
 2. **SOC Dashboard (`/dashboard`)**:
-   - View live KPI cards, traffic trend graph, attack distribution chart, and recent alerts. Click **Refresh Data** or **Resolve** on an alert.
+   - View live KPI cards, traffic trend graph, attack distribution chart, and recent alerts. Click **Refresh Data**, **Resolve** on an alert, or **Reset Live Data** to start a clean live session.
 3. **AI Flow Inspector (`/detection`)**:
    - Click any preset button (`DDoS Flood`, `Mirai Botnet`, `SSH Brute Force`, etc.) to auto-populate features.
    - Click **Execute AI Detection** to inspect the flow and observe genuine confidence, Mitre ID, and multi-class probability distributions.

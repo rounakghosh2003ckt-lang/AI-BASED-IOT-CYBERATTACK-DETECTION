@@ -40,7 +40,9 @@
                 <div class="cyber-card accent-cyan p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted small font-mono">SOC TELEMETRY RADAR</span>
-                        <span class="badge-cyber critical">DEFCON 2</span>
+                        <span class="badge-cyber {{ 'critical' if stats.active_threats > 5 else ('high' if stats.active_threats > 0 else 'safe') }}">
+                            {{ 'DEFCON 2 - THREAT ELEVATED' if stats.active_threats > 5 else ('DEFCON 3 - GUARDED' if stats.active_threats > 0 else 'DEFCON 5 - SECURE') }}
+                        </span>
                     </div>
                     <div class="text-center my-4">
                         <div class="display-3 text-info font-monospace">
